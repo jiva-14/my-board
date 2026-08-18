@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Kanban Board</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+      <div class="logo-area">
+        <div class="logo-icon">✓</div>
+        <h1>My Kanban Board</h1>
+      </div>
+
+      <div class="sidebar-card">
+        <span class="dot todo-dot"></span>
+        <div>
+          <strong>TO DO</strong>
+          <p id="side-todo-count">0 tasks</p>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <span class="dot progress-dot"></span>
+        <div>
+          <strong>IN PROGRESS</strong>
+          <p id="side-progress-count">0 tasks</p>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <span class="dot done-dot"></span>
+        <div>
+          <strong>DONE</strong>
+          <p id="side-done-count">0 tasks</p>
+        </div>
+      </div>
+
+    </aside>
+
+
+    <!-- Main Board -->
+    <main class="main-content">
+
+      <header class="top-header">
+        <div>
+          <h2>My Tasks</h2>
+          <p>Organize your work and stay productive.</p>
+        </div>
+      </header>
+
+
+      <div class="board">
+
+        <!-- TO DO -->
+        <section class="column todo-column" data-status="todo">
+
+          <div class="column-header">
+            <div>
+              <h2>To Do</h2>
+              <p>Tasks to start</p>
+            </div>
+
+            <span class="count" id="count-todo">0</span>
+          </div>
+
+          <div class="card-list" id="list-todo"></div>
+
+          <button class="add-card-btn" data-status="todo">
+            + Add task
+          </button>
+
+        </section>
+
+
+        <!-- IN PROGRESS -->
+        <section class="column progress-column" data-status="inprogress">
+
+          <div class="column-header">
+            <div>
+              <h2>In Progress</h2>
+              <p>Currently working</p>
+            </div>
+
+            <span class="count" id="count-inprogress">0</span>
+          </div>
+
+          <div class="card-list" id="list-inprogress"></div>
+
+          <button class="add-card-btn" data-status="inprogress">
+            + Add task
+          </button>
+
+        </section>
+
+
+        <!-- DONE -->
+        <section class="column done-column" data-status="done">
+
+          <div class="column-header">
+            <div>
+              <h2>Done</h2>
+              <p>Completed tasks</p>
+            </div>
+
+            <span class="count" id="count-done">0</span>
+          </div>
+
+          <div class="card-list" id="list-done"></div>
+
+          <button class="add-card-btn" data-status="done">
+            + Add task
+          </button>
+
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+
+  <!-- ADD / EDIT MODAL -->
+  <div class="modal-overlay" id="modal-overlay">
+
+    <div class="modal">
+
+      <div class="modal-header">
+        <h2 id="modal-heading">Add Task</h2>
+
+        <button id="modal-close" class="close-btn">
+          ×
+        </button>
+      </div>
+
+
+      <!-- Task Title -->
+      <label class="field-label" for="modal-title">
+        Task Title
+      </label>
+
+      <input
+        type="text"
+        id="modal-title"
+        placeholder="Enter task title"
+      >
+
+
+      <!-- Description -->
+      <label class="field-label" for="modal-desc">
+        Description
+      </label>
+
+      <textarea
+        id="modal-desc"
+        placeholder="Enter task description"
+        rows="4"
+      ></textarea>
+
+
+      <!-- Priority -->
+      <label class="field-label">
+        Priority
+      </label>
+
+      <div class="priority-options">
+
+        <button
+          class="priority-btn priority-low"
+          data-priority="low"
+          type="button"
+        >
+          Low
+        </button>
+
+        <button
+          class="priority-btn priority-medium active"
+          data-priority="medium"
+          type="button"
+        >
+          Medium
+        </button>
+
+        <button
+          class="priority-btn priority-high"
+          data-priority="high"
+          type="button"
+        >
+          High
+        </button>
+
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="modal-actions">
+
+        <button
+          id="modal-cancel"
+          class="btn-secondary"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="modal-save"
+          class="btn-primary"
+          type="button"
+        >
+          Save
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- JavaScript -->
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+  <script src="dragDrop.js"></script>
+
+</body>
+</html>
