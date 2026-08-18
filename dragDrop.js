@@ -2,110 +2,90 @@
 // DRAG AND DROP
 // ===============================
 
-const boardColumns =
-  document.querySelectorAll(".column");
+let draggedCardId = null;
+
+// Start dragging a card
+document.addEventListener("dragstart", (event) => {
+
+  const card = event.target.closest(".task-card");
+
+  if (!card) return;
+
+  draggedCardId = card.dataset.id;
+
+  event.dataTransfer.effectAllowed = "move";
+  event.dataTransfer.setData("text/plain", draggedCardId);
+
+  card.classList.add("dragging");
+});
 
 
-// Make cards draggable
-function enableDragForCards() {
+// Stop dragging
+document.addEventListener("dragend", (event) => {
 
-  const cards =
-    document.querySelectorAll(".task-card");
+  const card = event.target.closest(".task-card");
 
+  if (card) {
+    card.classList.remove("dragging");
+  }
 
-  cards.forEach((card) => {
+  draggedCardId = null;
 
-    card.addEventListener(
-      "dragstart",
-      (event) => {
-
-        event.dataTransfer.setData(
-          "text/plain",
-          card.dataset.id
-        );
-
-        card.classList.add(
-          "dragging"
-        );
-
-      }
-    );
-
-
-    card.addEventListener(
-      "dragend",
-      () => {
-
-        card.classList.remove(
-          "dragging"
-        );
-
-      }
-    );
-
+  document.querySelectorAll(".column").forEach((column) => {
+    column.classList.remove("drag-over");
   });
-
-}
-
-
-// Column drag events
-boardColumns.forEach((column) => {
-
-  column.addEventListener(
-    "dragover",
-    (event) => {
-
-      event.preventDefault();
-
-      column.classList.add(
-        "drag-over"
-      );
-
-    }
-  );
+});
 
 
-  column.addEventListener(
-    "dragleave",
-    () => {
+// Allow dropping on columns
+document.addEventListener("dragover", (event) => {
 
-      column.classList.remove(
-        "drag-over"
-      );
+  const column = event.target.closest(".column");
 
-    }
-  );
+  if (!column) return;
 
+  event.preventDefault();
 
-  column.addEventListener(
-    "drop",
-    (event) => {
+  column.classList.add("drag-over");
 
-      event.preventDefault();
-
-      column.classList.remove(
-        "drag-over"
-      );
+  event.dataTransfer.dropEffect = "move";
+});
 
 
-      const cardId =
-        event.dataTransfer.getData(
-          "text/plain"
-        );
+// Remove drag-over effect
+document.addEventListener("dragleave", (event) => {
+
+  const column = event.target.closest(".column");
+
+  if (!column) return;
+
+  // Only remove when actually leaving the column
+  if (!column.contains(event.relatedTarget)) {
+    column.classList.remove("drag-over");
+  }
+});
 
 
-      const newStatus =
-        column.dataset.status;
+// Drop card into column
+document.addEventListener("drop", (event) => {
 
+  const column = event.target.closest(".column");
 
-      moveCard(
-        cardId,
-        newStatus
-      );
+  if (!column) return;
 
-    }
-  );
+  event.preventDefault();
 
+  column.classList.remove("drag-over");
+
+  const cardId =
+    event.dataTransfer.getData("text/plain") ||
+    draggedCardId;
+
+  const newStatus = column.dataset.status;
+
+  if (!cardId || !newStatus) return;
+
+  moveCard(cardId, newStatus);
 });
 
 
@@ -116,42 +96,39 @@ boardColumns.forEach((column) => {
 function moveCard(id, newStatus) {
 
   let card = null;
-
   let oldStatus = null;
 
-
+  // Find the card
   columns.forEach((status) => {
 
-    const index =
-      board[status].findIndex(
-        (item) =>
-          item.id === id
-      );
-
+    const index = board[status].findIndex(
+      (item) => String(item.id) === String(id)
+    );
 
     if (index !== -1) {
 
-      card =
-        board[status][index];
+      card = board[status][index];
 
       oldStatus = status;
 
-      board[status].splice(
-        index,
-        1
-      );
-
+      board[status].splice(index, 1);
     }
-
   });
 
 
-  if (!card) return;
+  // Card not found
+  if (!card) {
+    console.log("Card not found:", id);
+    return;
+  }
 
 
+  // Put card into new column
   board[newStatus].push(card);
 
 
-  render();
+  // Save and display updated board
+  saveBoard(board);
 
+  render();
 }
