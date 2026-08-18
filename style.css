@@ -566,3 +566,18 @@ textarea {
   }
 
 }
+.task-card {
+  cursor: grab;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.task-card.dragging {
+  opacity: 0.5;
+}
+
+.column.drag-over {
+  border: 2px dashed #4f46e5;
+}
